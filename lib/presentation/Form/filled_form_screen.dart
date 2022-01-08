@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myform/presentation/component/form_field.dart';
+
+import '../../data/constants/app_assets.dart';
+import '../../domain/repositories/user_repository.dart';
+import '../component/form_field.dart';
 import 'bloc/myform_bloc.dart';
-import 'package:myform/presentation/Form/bloc/myform_state.dart';
 import 'bloc/myform_event.dart';
-import 'package:myform/data/constants/app_assets.dart';
-import 'package:myform/domain/repositories/user_repository.dart';
+import 'bloc/myform_state.dart';
 
 class FilledFormScreen extends StatefulWidget {
-  static const String id = 'FilledForm';
   const FilledFormScreen({Key? key}) : super(key: key);
+  static const String id = 'FilledForm';
 
   @override
   _FilledFormScreenState createState() => _FilledFormScreenState();
@@ -20,7 +21,7 @@ class _FilledFormScreenState extends State<FilledFormScreen> {
 
   @override
   void initState() {
-    var repo = context.read<UserRepository>();
+    final UserRepository repo = context.read<UserRepository>();
     controllers = <String, TextEditingController>{
       nameKey: TextEditingController(
         text: repo.currentUser.name,
@@ -40,7 +41,7 @@ class _FilledFormScreenState extends State<FilledFormScreen> {
 
   @override
   void dispose() {
-    controllers.forEach((key, value) {
+    controllers.forEach((String key, TextEditingController value) {
       value.dispose();
     });
     super.dispose();
@@ -48,11 +49,11 @@ class _FilledFormScreenState extends State<FilledFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var repo = context.read<UserRepository>();
+    final UserRepository repo = context.read<UserRepository>();
     return BlocConsumer<MyFormBloc, MyFormState>(
-      listener: (context, state) {
+      listener: (BuildContext context, MyFormState state) {
         if (state is MyFormSuccessState) {
-          context.read<MyFormBloc>().add(MyFormSaveEvent());
+          context.read<MyFormBloc>().add(const MyFormSaveEvent());
         }
         if (!state.isEditing) {
           controllers[nameKey]!.text = repo.currentUser.name!;
@@ -62,9 +63,9 @@ class _FilledFormScreenState extends State<FilledFormScreen> {
           controllers[bankIfscCodeKey]!.text = repo.currentUser.bankIfscCode!;
         }
       },
-      builder: (context, state) {
+      builder: (BuildContext context, MyFormState state) {
         if (state is MyFormErrorState) {
-          return Center(
+          return const Center(
             child: Text('Oops how did you end up here!'),
           );
         } else {
@@ -77,16 +78,17 @@ class _FilledFormScreenState extends State<FilledFormScreen> {
   Widget _builBankDetailsWidget(BuildContext context, MyFormState state) {
     return Scaffold(
       appBar: AppBar(
-        title: state.isEditing ? Text('Edit Form') : Text('Your Form'),
+        title:
+            state.isEditing ? const Text('Edit Form') : const Text('Your Form'),
         elevation: 0,
       ),
       body: Column(
-        children: [
+        children: <Widget>[
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: ListView(
-                children: [
+                children: <Widget>[
                   CustomTextField(
                     controller: controllers[nameKey]!,
                     isEnabled: state.isEditing,
@@ -111,66 +113,68 @@ class _FilledFormScreenState extends State<FilledFormScreen> {
               ),
             ),
           ),
-          state.isEditing
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        context.read<MyFormBloc>().add(
-                              const MyFormSaveEvent(),
-                            );
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.blue),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: Colors.deepPurple[50],
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 30,
-                        ),
+          if (state.isEditing)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    context.read<MyFormBloc>().add(
+                          const MyFormSaveEvent(),
+                        );
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blue),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        var formData = controllers.map<String, String>(
-                            (key, value) =>
+                  ),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.deepPurple[50],
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 30,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    final Map<String, String> formData =
+                        controllers.map<String, String>(
+                            (String key, TextEditingController value) =>
                                 MapEntry<String, String>(key, value.text));
-                        context
-                            .read<MyFormBloc>()
-                            .add(MyFormSubmitEvent(formData: formData));
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.blue),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                          color: Colors.deepPurple[50],
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 30,
-                        ),
+                    context
+                        .read<MyFormBloc>()
+                        .add(MyFormSubmitEvent(formData: formData));
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blue),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                  ],
-                )
-              : SizedBox(
-                  height: 0,
-                )
+                  ),
+                  child: Text(
+                    'Save',
+                    style: TextStyle(
+                      color: Colors.deepPurple[50],
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 30,
+                    ),
+                  ),
+                ),
+              ],
+            )
+          else
+            const SizedBox(
+              height: 0,
+            )
         ],
       ),
       floatingActionButton: !state.isEditing

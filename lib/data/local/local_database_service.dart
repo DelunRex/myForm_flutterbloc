@@ -1,6 +1,7 @@
-import 'package:myform/domain/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:myform/data/constants/app_assets.dart';
+
+import '../../domain/models/user_model.dart';
+import '../constants/app_assets.dart';
 
 class LocalStorageService {
   static late LocalStorageService _instance;
@@ -14,7 +15,7 @@ class LocalStorageService {
   static LocalStorageService get instance => _instance;
 
   dynamic _getFromDisk(String key) {
-    var value = _preferences.get(key);
+    final Object? value = _preferences.get(key);
     return value;
   }
 
@@ -36,7 +37,7 @@ class LocalStorageService {
     }
   }
 
-  bool get isFormDetailsSaved => _getFromDisk(formDetailsKey) ?? false;
+  bool get isFormDetailsSaved => _getFromDisk(formDetailsKey) != null;
 
   set isFormDetailsSaved(bool value) =>
       _saveToDisk<bool>(formDetailsKey, value);
@@ -44,7 +45,7 @@ class LocalStorageService {
   bool get isUserLoggedIn => _getList(userKey) != null;
 
   User get user {
-    List<String> userData = _getList(userKey)!;
+    final List<String> userData = _getList(userKey)!;
     return User(
       name: userData[0],
       address: userData[1],
@@ -54,7 +55,7 @@ class LocalStorageService {
   }
 
   set user(User user) {
-    List<String> list = [];
+    final List<String> list = <String>[];
     if (user.name != null) {
       list.add(user.name!);
     }

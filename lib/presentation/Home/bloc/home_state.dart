@@ -4,15 +4,15 @@ class HomeState extends Equatable {
   const HomeState();
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => <Object?>[];
 }
 
 class RouteState extends HomeState {
-  final String route;
   const RouteState({
     required this.route,
   });
+  final String route;
 
   @override
-  List<Object?> get props => [route];
+  List<Object?> get props => <Object?>[route];
 }

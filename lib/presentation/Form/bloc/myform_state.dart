@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
 
 class MyFormState extends Equatable {
-  final bool isEditing;
   const MyFormState({required this.isEditing});
+  final bool isEditing;
+
   @override
-  List<Object?> get props => [isEditing];
+  List<Object?> get props => <Object?>[isEditing];
 
   MyFormState copyWith({
     bool? isEditing,
@@ -19,12 +20,12 @@ class MyFormSuccessState extends MyFormState {
   const MyFormSuccessState() : super(isEditing: true);
 
   @override
-  List<Object?> get props => [isEditing];
+  List<Object?> get props => <Object?>[isEditing];
 }
 
 class MyFormErrorState extends MyFormState {
   const MyFormErrorState() : super(isEditing: true);
 
   @override
-  List<Object?> get props => [isEditing];
+  List<Object?> get props => <Object?>[isEditing];
 }

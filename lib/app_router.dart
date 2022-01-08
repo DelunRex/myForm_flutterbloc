@@ -1,40 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:myform/domain/repositories/user_repository.dart';
-import 'package:myform/presentation/Form/empty_form_screen.dart';
-import 'package:myform/presentation/Form/filled_form_screen.dart';
-import 'package:myform/presentation/Home/home_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myform/presentation/Home/bloc/home_bloc.dart';
-import 'package:myform/presentation/Form/bloc/myform_bloc.dart';
+
+import 'domain/repositories/user_repository.dart';
+import 'presentation/Form/bloc/myform_bloc.dart';
+import 'presentation/Form/empty_form_screen.dart';
+import 'presentation/Form/filled_form_screen.dart';
+import 'presentation/Home/bloc/home_bloc.dart';
+import 'presentation/Home/home_screen.dart';
 
 class AppRouter {
-  static Route<dynamic> generateRoute(RouteSettings settings) {
+  Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case HomeScreen.id:
         return MaterialPageRoute<HomeScreen>(
-          builder: (context) => BlocProvider(
-            create: (context) => HomeBloc(),
-            child: HomeScreen(),
+          builder: (BuildContext context) => BlocProvider<HomeBloc>(
+            create: (BuildContext context) => HomeBloc(),
+            child: const HomeScreen(),
           ),
         );
       case EmptyFormScreen.id:
         return MaterialPageRoute<EmptyFormScreen>(
-          builder: (context) => BlocProvider(
-            create: (context) => MyFormBloc(
+          builder: (BuildContext context) => BlocProvider<MyFormBloc>(
+            create: (BuildContext context) => MyFormBloc(
               userRepository: context.read<UserRepository>(),
               isEditing: true,
             ),
-            child: EmptyFormScreen(),
+            child: const EmptyFormScreen(),
           ),
         );
       case FilledFormScreen.id:
         return MaterialPageRoute<FilledFormScreen>(
-          builder: (context) => BlocProvider(
-            create: (context) => MyFormBloc(
+          builder: (BuildContext context) => BlocProvider<MyFormBloc>(
+            create: (BuildContext context) => MyFormBloc(
               userRepository: context.read<UserRepository>(),
               isEditing: false,
             ),
-            child: FilledFormScreen(),
+            child: const FilledFormScreen(),
           ),
         );
       default:

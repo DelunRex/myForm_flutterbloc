@@ -1,32 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myform/domain/models/user_model.dart';
-import 'package:myform/domain/repositories/user_repository.dart';
-import 'package:myform/presentation/Form/empty_form_screen.dart';
-import 'package:myform/presentation/Form/filled_form_screen.dart';
-import 'package:myform/presentation/Home/bloc/home_bloc.dart';
-import 'package:myform/presentation/Home/bloc/home_state.dart';
-import 'package:myform/presentation/Home/bloc/home_event.dart';
+
+import '../../domain/models/user_model.dart';
+import '../../domain/repositories/user_repository.dart';
+import '../Form/empty_form_screen.dart';
+import '../Form/filled_form_screen.dart';
+import 'bloc/home_bloc.dart';
+import 'bloc/home_event.dart';
+import 'bloc/home_state.dart';
 
 class HomeScreen extends StatelessWidget {
-  static const id = 'Home';
   const HomeScreen({Key? key}) : super(key: key);
+  static const String id = 'Home';
 
   @override
   Widget build(BuildContext context) {
-    User user =
+    final User user =
         User(name: '', address: '', bankAccountNum: '', bankIfscCode: '');
-    UserRepository repository = context.read<UserRepository>();
+    final UserRepository repository = context.read<UserRepository>();
     if (!repository.isUserLoggedIn) {
       repository.registerUser(user);
     }
     return BlocListener<HomeBloc, HomeState>(
-      listener: (context, state) {
+      listener: (BuildContext context, HomeState state) {
         if (state is RouteState) {
           Navigator.of(context)
               .pushNamed(state.route)
-              .then((value) => context.read<HomeBloc>().add(
-                    HomeEvent(),
+              .then((Object? value) => context.read<HomeBloc>().add(
+                    const HomeEvent(),
                   ));
         }
       },
@@ -34,9 +35,10 @@ class HomeScreen extends StatelessWidget {
         body: Center(
           child: TextButton(
             onPressed: () {
-              var route = context.read<UserRepository>().isFormDetailsSaved
-                  ? FilledFormScreen.id
-                  : EmptyFormScreen.id;
+              final String route =
+                  context.read<UserRepository>().isFormDetailsSaved
+                      ? FilledFormScreen.id
+                      : EmptyFormScreen.id;
               context.read<HomeBloc>().add(RouteEvent(route: route));
             },
             style: ButtonStyle(

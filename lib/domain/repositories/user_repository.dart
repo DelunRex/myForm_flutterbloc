@@ -1,13 +1,14 @@
-import 'package:myform/data/local/local_database_service.dart';
-import 'package:myform/domain/models/user_model.dart';
-import 'package:myform/data/constants/app_assets.dart';
+import '../../data/constants/app_assets.dart';
+import '../../data/local/local_database_service.dart';
+import '../models/user_model.dart';
 
 class UserRepository {
-  final LocalStorageService _localStorageService;
-//  final ApiService _apiService;  => For api calls if any
   UserRepository({
     required LocalStorageService localStorageService,
   }) : _localStorageService = localStorageService;
+
+  final LocalStorageService _localStorageService;
+//  final ApiService _apiService;  => For api calls if any
 
   User get currentUser {
     return _localStorageService.user;
@@ -17,9 +18,9 @@ class UserRepository {
   bool get isFormDetailsSaved => _localStorageService.isFormDetailsSaved;
 
   Map<String, String> get bankDetails {
-    Map<String, String> map = {};
+    final Map<String, String> map = <String, String>{};
     return map
-      ..addAll({
+      ..addAll(<String, String>{
         nameKey: currentUser.name!,
         addressKey: currentUser.address!,
         bankAccountNumKey: currentUser.bankAccountNum!,

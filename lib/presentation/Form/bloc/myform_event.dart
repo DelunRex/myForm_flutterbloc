@@ -4,17 +4,17 @@ class MyFormEvent extends Equatable {
   const MyFormEvent();
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => <Object?>[];
 }
 
 class MyFormSubmitEvent extends MyFormEvent {
-  final Map<String, String> formData;
   const MyFormSubmitEvent({
     required this.formData,
   }) : super();
+  final Map<String, String> formData;
 
   @override
-  List<Object?> get props => [formData];
+  List<Object?> get props => <Object?>[formData];
 }
 
 class MyFormEditingEvent extends MyFormEvent {
