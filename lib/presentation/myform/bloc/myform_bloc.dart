@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 
-import '../../../data/constants/app_assets.dart';
 import '../../../domain/repositories/user_repository.dart';
+import '../../../globals.dart';
 import 'myform_event.dart';
 import 'myform_state.dart';
 
@@ -9,16 +9,28 @@ class MyFormBloc extends Bloc<MyFormEvent, MyFormState> {
   MyFormBloc({required this.userRepository, required bool isEditing})
       : super(MyFormState(isEditing: isEditing)) {
     on<MyFormSubmitEvent>((MyFormSubmitEvent event, Emitter<MyFormState> emit) {
-      try {
+      final Map<String, String?> errorMap = <String, String?>{};
+      bool isError = false;
+      final Map<String, String> map = event.formData;
+      map.forEach((String key, String value) {
+        if (value == '') {
+          isError = true;
+          errorMap[key] = "$key Value can't be empty";
+        } else {
+          errorMap[key] = null;
+        }
+      });
+      if (isError) {
+        emit(MyFormErrorState(errorMap: errorMap));
+      } else {
         userRepository.addFormDetails(
-            event.formData[nameKey]!,
-            event.formData[addressKey]!,
-            event.formData[bankAccountNumKey]!,
-            event.formData[bankIfscCodeKey]!);
+          map[nameKey]!,
+          map[addressKey]!,
+          map[bankAccountNumKey]!,
+          map[bankIfscCodeKey]!,
+        );
         userRepository.isFormDetailsSaved = true;
         emit(const MyFormSuccessState());
-      } catch (e) {
-        emit(const MyFormErrorState());
       }
     });
     on<MyFormEditingEvent>(

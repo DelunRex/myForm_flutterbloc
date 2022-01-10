@@ -6,14 +6,6 @@ class MyFormState extends Equatable {
 
   @override
   List<Object?> get props => <Object?>[isEditing];
-
-  MyFormState copyWith({
-    bool? isEditing,
-  }) {
-    return MyFormState(
-      isEditing: isEditing ?? this.isEditing,
-    );
-  }
 }
 
 class MyFormSuccessState extends MyFormState {
@@ -24,8 +16,9 @@ class MyFormSuccessState extends MyFormState {
 }
 
 class MyFormErrorState extends MyFormState {
-  const MyFormErrorState() : super(isEditing: true);
+  const MyFormErrorState({required this.errorMap}) : super(isEditing: true);
+  final Map<String, String?> errorMap;
 
   @override
-  List<Object?> get props => <Object?>[isEditing];
+  List<Object?> get props => <Object?>[errorMap, isEditing];
 }

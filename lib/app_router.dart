@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'domain/repositories/user_repository.dart';
-import 'presentation/Form/bloc/myform_bloc.dart';
-import 'presentation/Form/empty_form_screen.dart';
-import 'presentation/Form/filled_form_screen.dart';
 import 'presentation/Home/bloc/home_bloc.dart';
 import 'presentation/Home/home_screen.dart';
+import 'presentation/myform/bloc/myform_bloc.dart';
+import 'presentation/myform/empty_form_screen.dart';
+import 'presentation/myform/filled_form_screen.dart';
 
 class AppRouter {
   Route<dynamic> generateRoute(RouteSettings settings) {

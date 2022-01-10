@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/constants/app_assets.dart';
+import '../../globals.dart';
 import '../component/form_field.dart';
 import 'bloc/myform_bloc.dart';
 import 'bloc/myform_event.dart';
@@ -9,7 +9,7 @@ import 'bloc/myform_state.dart';
 
 class EmptyFormScreen extends StatefulWidget {
   const EmptyFormScreen({Key? key}) : super(key: key);
-  static const String id = 'EmptyForm';
+  static const String id = 'emptyForm';
 
   @override
   _EmptyFormScreenState createState() => _EmptyFormScreenState();
@@ -45,18 +45,13 @@ class _EmptyFormScreenState extends State<EmptyFormScreen> {
           Future<void>.delayed(const Duration(seconds: 1),
               () async => Navigator.of(context).pop());
           return _buildSuccessPage(context);
-        } else if (state is MyFormErrorState) {
-          return const Center(
-            child: Text('Oops how did you end up here!'),
-          );
-        } else {
-          return _builAddBankDetailsWidget(context);
         }
+        return _builAddBankDetailsWidget(context, state);
       },
     );
   }
 
-  Widget _builAddBankDetailsWidget(BuildContext context) {
+  Widget _builAddBankDetailsWidget(BuildContext context, MyFormState state) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Fill Form'),
@@ -73,21 +68,33 @@ class _EmptyFormScreenState extends State<EmptyFormScreen> {
                     controller: controllers[nameKey]!,
                     isEnabled: true,
                     headerText: 'Name',
+                    errorText: (state is MyFormErrorState)
+                        ? state.errorMap[nameKey]
+                        : null,
                   ),
                   CustomTextField(
                     controller: controllers[addressKey]!,
                     isEnabled: true,
                     headerText: 'Address',
+                    errorText: (state is MyFormErrorState)
+                        ? state.errorMap[addressKey]
+                        : null,
                   ),
                   CustomTextField(
                     controller: controllers[bankAccountNumKey]!,
                     isEnabled: true,
                     headerText: 'Account Number',
+                    errorText: (state is MyFormErrorState)
+                        ? state.errorMap[bankAccountNumKey]
+                        : null,
                   ),
                   CustomTextField(
                     controller: controllers[bankIfscCodeKey]!,
                     isEnabled: true,
                     headerText: 'IFSC Code',
+                    errorText: (state is MyFormErrorState)
+                        ? state.errorMap[bankIfscCodeKey]
+                        : null,
                   ),
                 ],
               ),

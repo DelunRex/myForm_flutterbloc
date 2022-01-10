@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/models/user_model.dart';
-import '../constants/app_assets.dart';
+import '../../globals.dart';
 
 class LocalStorageService {
   static late LocalStorageService _instance;

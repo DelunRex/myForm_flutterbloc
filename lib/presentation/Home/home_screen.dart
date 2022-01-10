@@ -3,15 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/models/user_model.dart';
 import '../../domain/repositories/user_repository.dart';
-import '../Form/empty_form_screen.dart';
-import '../Form/filled_form_screen.dart';
+import '../myform/empty_form_screen.dart';
+import '../myform/filled_form_screen.dart';
 import 'bloc/home_bloc.dart';
 import 'bloc/home_event.dart';
 import 'bloc/home_state.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
-  static const String id = 'Home';
+  static const String id = 'home';
 
   @override
   Widget build(BuildContext context) {

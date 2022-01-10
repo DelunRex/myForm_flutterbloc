@@ -5,12 +5,14 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     required this.isEnabled,
     required this.headerText,
+    this.errorText,
     this.hintText,
     Key? key,
   }) : super(key: key);
 
   final TextEditingController controller;
   final bool isEnabled;
+  final String? errorText;
   final String headerText;
   final String? hintText;
 
@@ -38,6 +40,7 @@ class CustomTextField extends StatelessWidget {
               contentPadding: const EdgeInsets.all(20.0),
               hintStyle: Theme.of(context).textTheme.subtitle1,
               hintText: hintText,
+              errorText: errorText,
               errorStyle: Theme.of(context).textTheme.overline,
               errorMaxLines: 3,
               filled: !isEnabled,
@@ -49,6 +52,9 @@ class CustomTextField extends StatelessWidget {
               disabledBorder: const OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.all(Radius.circular(10))),
+              errorBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+              ),
               border: const OutlineInputBorder(
                 borderSide: BorderSide(color: Color(0xFF007EFA)),
                 borderRadius: BorderRadius.all(Radius.circular(10)),

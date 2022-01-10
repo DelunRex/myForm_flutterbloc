@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/constants/app_assets.dart';
 import '../../domain/repositories/user_repository.dart';
+import '../../globals.dart';
 import '../component/form_field.dart';
 import 'bloc/myform_bloc.dart';
 import 'bloc/myform_event.dart';
@@ -10,7 +10,7 @@ import 'bloc/myform_state.dart';
 
 class FilledFormScreen extends StatefulWidget {
   const FilledFormScreen({Key? key}) : super(key: key);
-  static const String id = 'FilledForm';
+  static const String id = 'filledForm';
 
   @override
   _FilledFormScreenState createState() => _FilledFormScreenState();
@@ -51,28 +51,19 @@ class _FilledFormScreenState extends State<FilledFormScreen> {
   Widget build(BuildContext context) {
     final UserRepository repo = context.read<UserRepository>();
     return BlocConsumer<MyFormBloc, MyFormState>(
-      listener: (BuildContext context, MyFormState state) {
-        if (state is MyFormSuccessState) {
-          context.read<MyFormBloc>().add(const MyFormSaveEvent());
-        }
-        if (!state.isEditing) {
-          controllers[nameKey]!.text = repo.currentUser.name!;
-          controllers[bankAccountNumKey]!.text =
-              repo.currentUser.bankAccountNum!;
-          controllers[addressKey]!.text = repo.currentUser.address!;
-          controllers[bankIfscCodeKey]!.text = repo.currentUser.bankIfscCode!;
-        }
-      },
-      builder: (BuildContext context, MyFormState state) {
-        if (state is MyFormErrorState) {
-          return const Center(
-            child: Text('Oops how did you end up here!'),
-          );
-        } else {
-          return _builBankDetailsWidget(context, state);
-        }
-      },
-    );
+        listener: (BuildContext context, MyFormState state) {
+      if (state is MyFormSuccessState) {
+        context.read<MyFormBloc>().add(const MyFormSaveEvent());
+      }
+      if (!state.isEditing) {
+        controllers[nameKey]!.text = repo.currentUser.name!;
+        controllers[bankAccountNumKey]!.text = repo.currentUser.bankAccountNum!;
+        controllers[addressKey]!.text = repo.currentUser.address!;
+        controllers[bankIfscCodeKey]!.text = repo.currentUser.bankIfscCode!;
+      }
+    }, builder: (BuildContext context, MyFormState state) {
+      return _builBankDetailsWidget(context, state);
+    });
   }
 
   Widget _builBankDetailsWidget(BuildContext context, MyFormState state) {
@@ -93,21 +84,33 @@ class _FilledFormScreenState extends State<FilledFormScreen> {
                     controller: controllers[nameKey]!,
                     isEnabled: state.isEditing,
                     headerText: 'Name',
+                    errorText: (state is MyFormErrorState)
+                        ? state.errorMap[nameKey]
+                        : null,
                   ),
                   CustomTextField(
                     controller: controllers[addressKey]!,
                     isEnabled: state.isEditing,
                     headerText: 'Address',
+                    errorText: (state is MyFormErrorState)
+                        ? state.errorMap[addressKey]
+                        : null,
                   ),
                   CustomTextField(
                     controller: controllers[bankAccountNumKey]!,
                     isEnabled: state.isEditing,
                     headerText: 'Account Number',
+                    errorText: (state is MyFormErrorState)
+                        ? state.errorMap[bankAccountNumKey]
+                        : null,
                   ),
                   CustomTextField(
                     controller: controllers[bankIfscCodeKey]!,
                     isEnabled: state.isEditing,
                     headerText: 'IFSC Code',
+                    errorText: (state is MyFormErrorState)
+                        ? state.errorMap[bankIfscCodeKey]
+                        : null,
                   ),
                 ],
               ),

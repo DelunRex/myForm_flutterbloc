@@ -1,5 +1,5 @@
-import '../../data/constants/app_assets.dart';
 import '../../data/local/local_database_service.dart';
+import '../../globals.dart';
 import '../models/user_model.dart';
 
 class UserRepository {
